@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
 
+    BOT_TOKEN: str
+    COIN_MARKET_TOKEN:str
+
 
 
     @property
