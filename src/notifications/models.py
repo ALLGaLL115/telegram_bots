@@ -1,12 +1,9 @@
 from database import Base
 from sqlalchemy.orm import Mapped, mapped_column
 
-class NotificationSchema(BaseModel):
-    id: int
-    telegram_id: int
-    symbol: str
-    initial_price: float
-    target_price: float
+from notifications.schemas import NotificationSchema
+
+
 
 class Notifications(Base):
     __tablename__="notifications"

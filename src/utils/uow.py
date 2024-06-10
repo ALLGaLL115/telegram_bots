@@ -3,8 +3,6 @@ from typing import Type
 from database import async_session_maker
 from notifications.model import Notifications
 from notifications.repository import NotificationRepository
-from user.model import Users
-from user.repository import UserRepository
 
 class IUnitOfWork(ABC):
     notifications: Type[NotificationRepository]
