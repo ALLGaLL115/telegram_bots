@@ -2,6 +2,9 @@ from abc import ABC
 from database import Base
 from sqlalchemy import select, insert, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ISQLAlchemyRepository(ABC):
@@ -52,11 +55,14 @@ class SQLAlchemyRepository(ISQLAlchemyRepository):
 
 
     async def create(self, **data):
-        stmt = insert(self.model).values(**data).returning(self.model.id)
-        res = await self.session.execute(stmt)
-        res = res.scalar_one()
-        return res
-
+        try: 
+            stmt = insert(self.model).values(**data).returning(self.model.id)
+            res = await self.session.execute(stmt)
+            res = res.scalar_one()
+            return res
+        except Exception as e:
+            logger.error(e)
+            raise
 
     async def update(self, id: int, **data):
         stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model.id)

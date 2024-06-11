@@ -23,8 +23,13 @@ logger.addHandler(developing_handler)
 tracable_file_path = "tracable_crypto.json"
 
 class NotificationsService:
+
+
     async def add_new_notification(self, uow: IUnitOfWork, telegram_id: int, symbol: str, target_price: float):
         if not os.path.exists(tracable_file_path):
+            with open(tracable_file_path, 'w') as file:
+                json.dump({"symbols":[], "data": {}}, file, indent=4)
+        elif os.path.getsize(tracable_file_path) == 0:
             with open(tracable_file_path, 'w') as file:
                 json.dump({"symbols":[], "data": {}}, file, indent=4)
 
@@ -36,24 +41,21 @@ class NotificationsService:
         else: 
             response_json = await CoinMarketCapAPI().get_curent_prices([symbol])
             current_price = response_json["data"]["BTC"]["quote"]["USD"]["price"]
-            logger.info(data)
+            print(data)
             data["symbols"].append(symbol)
-            logger.info(data)
+            print(data)
             data["data"][symbol] = current_price
-            logger.info(data)
-        
+            with open(tracable_file_path, "w") as file:
+                json.dump(data, file, indent=4)
         async with uow:
-            await uow.notifications.create(
+            res= await uow.notifications.create(
                 telegram_id = telegram_id, 
                 symbol = symbol, 
                 target_price = target_price, 
-                current_price = current_price )
+                initial_price = current_price )
             await uow.commit()
             return "success"
             
-            
-
-
 
 
 

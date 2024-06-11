@@ -11,7 +11,7 @@ sys.path.append(os.path.join(sys.path[0], 'src'))
 from alembic import context
 from config import settings
 from database import Base
-from notifications.model import Notifications
+from notifications.models import Notifications
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
