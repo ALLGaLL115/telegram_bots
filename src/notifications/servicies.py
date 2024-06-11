@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from notifications.api import CoinMarketCapAPI
-from utils.uow import IUnitOfWork
+from utils.uow import IUnitOfWork, UnitOfWork
 
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ tracable_file_path = "tracable_crypto.json"
 class NotificationsService:
 
 
-    async def add_new_notification(self, uow: IUnitOfWork, telegram_id: int, symbol: str, target_price: float):
+    async def add_new_notification(self,  telegram_id: int, symbol: str, target_price: str):
         if not os.path.exists(tracable_file_path):
             with open(tracable_file_path, 'w') as file:
                 json.dump({"symbols":[], "data": {}}, file, indent=4)
@@ -47,11 +47,11 @@ class NotificationsService:
             data["data"][symbol] = current_price
             with open(tracable_file_path, "w") as file:
                 json.dump(data, file, indent=4)
-        async with uow:
+        async with UnitOfWork() as uow:
             res= await uow.notifications.create(
                 telegram_id = telegram_id, 
                 symbol = symbol, 
-                target_price = target_price, 
+                target_price = float(target_price), 
                 initial_price = current_price )
             await uow.commit()
             return "success"
