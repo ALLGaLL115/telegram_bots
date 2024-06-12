@@ -1,16 +1,22 @@
 import json
 import os
 from aiogram import Bot
+from celery import Celery
 
+from config import settings
 from notifications.api import CoinMarketCapAPI
 from notifications.schemas import NotificationSchema
-from utils.uow import IUnitOfWork, UnitOfWork
+from utils.uow import UnitOfWork
 
+
+celery_app = Celery('tasks', broker="redis://localhost:6379")
 
 tracable_file_path = "tracable_crypto.json"
 uow = UnitOfWork()
+bot = Bot(token=settings.BOT_TOKEN)
 
-async def send_ready_alerts(bot: Bot):
+@celery_app.task
+async def send_ready_alerts():
 
     if not os.path.exists(tracable_file_path):
         with open(tracable_file_path, 'w') as file:
@@ -37,5 +43,10 @@ async def send_ready_alerts(bot: Bot):
 
         await uow.commit()
 
-   
- 
+
+celery_app.conf.beat_schedule = {
+    'check_notifications_every 10 seconds':{
+        'task':'tasks.send_ready_alerts',
+        'schedul':5
+    }
+}

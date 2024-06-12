@@ -7,7 +7,7 @@ from utils.repository import SQLAlchemyRepository
 class NotificationsRepository(SQLAlchemyRepository):
     model = Notifications
 
-    async def delete_executed_notifications(self, data: dict):
+    async def get_and_delete_suitable_notifications(self, data: dict):
         mailing: NotificationSchema = []
         for k, v in data['data'].keys():
             stmt = delete(self.model).where(
