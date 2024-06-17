@@ -40,6 +40,6 @@ async def choose_symbol(message: Message, state: FSMContext):
         symbol=data["symbol"],
         target_price=message.text
     )
-    await message.answer(f"При достижении {data["symbol"]} цены {message.text} вам придет сообщение.")
+    await message.answer(f"При достижении {data['symbol']} цены {message.text} вам придет сообщение.")
     await state.clear()
 

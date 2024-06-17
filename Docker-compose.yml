@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres
+    container_name: app_database
+    command: -p 5433
+    expose:
+      - 5433
+    environment:
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: testDb
+    env_file:
+      - .dev_env
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    
+  app:
+    build: 
+      context: .
+    container_name: app_name
+    env_file:
+      - .dev_env
+
+

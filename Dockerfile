@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.11
 
 RUN mkdir /testovoe
 
@@ -12,4 +12,4 @@ COPY . .
 
 WORKDIR src
 
-CMD [ "python main.py" ]
+CMD [ "python", "main.py" ]

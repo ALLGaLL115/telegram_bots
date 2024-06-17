@@ -40,7 +40,8 @@ class NotificationsService:
             current_price = data["data"][symbol]
         else: 
             response_json = await CoinMarketCapAPI().get_curent_prices([symbol])
-            current_price = response_json["data"]["BTC"]["quote"]["USD"]["price"]
+            print(response_json)
+            current_price = response_json["data"][symbol]["quote"]["USD"]["price"]
             print(data)
             data["symbols"].append(symbol)
             print(data)
