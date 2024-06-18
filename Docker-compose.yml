@@ -8,12 +8,8 @@ services:
     expose:
       - 5433
     environment:
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: testDb
-    env_file:
-      - .dev_env
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - POSTGRES_DB=testDb
+      - POSTGRES_PASSWORD=pass
     
   app:
     build: 
@@ -21,5 +17,7 @@ services:
     container_name: app_name
     env_file:
       - .dev_env
+    depends_on:
+      - db
 
 
